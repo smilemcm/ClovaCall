@@ -1,0 +1,12 @@
+log/
+models/
+
+data/zeroth_korean/
+
+.ipynb_checkpoints/
+
+*.DS_Store
+*.pyc
+
+*.wav
+*.flac

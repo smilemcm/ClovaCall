@@ -35,6 +35,10 @@ from data_loader import AudioDataLoader, SpectrogramDataset, BucketingSampler
 
 from models import EncoderRNN, DecoderRNN, Seq2Seq
 
+# @Kwang-Ho
+import time
+import datetime
+
 
 char2index = dict()
 index2char = dict()
@@ -158,12 +162,21 @@ def evaluate(model, data_loader, criterion, device, save_output=False):
 
             src_len = scripts.size(1)
             target = scripts[:, 1:]
-
+            
             logit = model(feats, feat_lengths, None, teacher_forcing_ratio=0.0)
             logit = torch.stack(logit, dim=1).to(device)
             y_hat = logit.max(-1)[1]
 
-            logit = logit[:,:target.size(1),:] # cut over length to calculate loss
+#             print("before: ", logit.size())
+#             logit = logit[:,:target.size(1),:] # cut over length to calculate loss
+#             print("after: ", logit.size())
+
+            
+            min_seq_len = min(logit.size(1), target.size(1))
+            logit = logit[:, :min_seq_len,:] # cut over length to calculate loss
+            target = target[:, :min_seq_len] # cut over length to calculate loss
+            
+            
             loss = criterion(logit.contiguous().view(-1, logit.size(-1)), target.contiguous().view(-1))
             total_loss += loss.item()
             total_num += sum(feat_lengths).item()
@@ -337,9 +350,19 @@ def main():
         best_cer = 1e10
         begin_epoch = 0
         
+        # start_time = time.time()
+        start_time = datetime.datetime.now()
+        
         for epoch in range(begin_epoch, args.epochs):
             train_loss, train_cer = train(train_model, train_loader, criterion, optimizer, device, epoch, train_sampler, args.max_norm, args.teacher_forcing)
-
+            
+            # end_time = time.time()
+            # elapsed_time = end_time - start_time
+            elapsed_time  = datetime.datetime.now() - start_time
+            
+            train_log = 'Train({name}) Summary Epoch: [{0}]\tAverage Loss {loss:.3f}\tAverage CER {cer:.3f}\tTime {time:}'.format(epoch + 1, name='train', loss=train_loss, cer=train_cer, time=elapsed_time)
+            print(train_log)
+            
             cer_list = []
             for test_file in args.test_file_list:
                 test_loader = testLoader_dict[test_file]
