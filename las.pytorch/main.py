@@ -140,7 +140,8 @@ def train(model, data_loader, criterion, optimizer, device, epoch, train_sampler
               'Cer {cer:.4f}'.format(
               (epoch + 1), (i + 1), len(train_sampler), loss=loss, cer=cer))
 
-    return total_loss / total_num, (total_dist / total_length) * 100
+    # return total_loss / total_num, (total_dist / total_length) * 100
+    return total_loss / len(data_loader), (total_dist / total_length) * 100
 
 
 def evaluate(model, data_loader, criterion, device, save_output=False):
@@ -167,16 +168,8 @@ def evaluate(model, data_loader, criterion, device, save_output=False):
             logit = torch.stack(logit, dim=1).to(device)
             y_hat = logit.max(-1)[1]
 
-#             print("before: ", logit.size())
-#             logit = logit[:,:target.size(1),:] # cut over length to calculate loss
-#             print("after: ", logit.size())
-
-            
-            min_seq_len = min(logit.size(1), target.size(1))
-            logit = logit[:, :min_seq_len,:] # cut over length to calculate loss
-            target = target[:, :min_seq_len] # cut over length to calculate loss
-            
-            
+            logit = logit[:,:target.size(1),:] # cut over length to calculate loss
+                        
             loss = criterion(logit.contiguous().view(-1, logit.size(-1)), target.contiguous().view(-1))
             total_loss += loss.item()
             total_num += sum(feat_lengths).item()
@@ -191,7 +184,8 @@ def evaluate(model, data_loader, criterion, device, save_output=False):
             total_sent_num += target.size(0)
 
 
-    aver_loss = total_loss / total_num
+    # aver_loss = total_loss / total_num
+    aver_loss = total_loss / len(data_loader)
     aver_cer = float(total_dist / total_length) * 100
     return aver_loss, aver_cer, transcripts_list
 
@@ -331,6 +325,7 @@ def main():
             optimizer.load_state_dict(optim_state)
 
     criterion = nn.CrossEntropyLoss(reduction='mean').to(device)
+    
 
     print(model)
     print("Number of parameters: %d" % Seq2Seq.get_param_size(model))

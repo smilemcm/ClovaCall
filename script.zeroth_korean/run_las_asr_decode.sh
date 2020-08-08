@@ -54,6 +54,7 @@ DECODER_SIZE=512
 GPU_SIZE=1
 CPU_SIZE=8 # 4 
 
+MAX_LEN=128
 
 TRAIN_INFO="zeroth_korean" # "ClovaCall"
 MODE="test"
@@ -99,4 +100,5 @@ python -u $TARGET_CODE \
 --labels-path $LABEL_FILE \
 --dataset-path $DATASET_PATH \
 --load-model --mode $MODE \
+--max_len $MAX_LEN \
 --cuda --save-folder $CUR_MODEL_PATH --model-path $CUR_MODEL_PATH/final.pth --log-path $LOG_CHILD_PATH | tee $LOG_FILE 
