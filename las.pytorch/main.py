@@ -337,8 +337,13 @@ def main():
             test_loader = testLoader_dict[test_file]
             test_loss, test_cer, transcripts_list = evaluate(model, test_loader, criterion, device, save_output=True)
 
-            for line in transcripts_list:
-                print(line)
+            for idx, line in enumerate(transcripts_list):
+                # print(line)
+                hyp, ref = line.split('\t')
+                print("({:3d}/{:3d}) [REF]: {}".format(idx+1, len(transcripts_list), ref))
+                print("({:3d}/{:3d}) [HYP]: {}".format(idx+1, len(transcripts_list), hyp))
+                print()
+                
 
             print("Test {} CER : {}".format(test_file, test_cer))
     else:
