@@ -19,7 +19,7 @@ def read_text(text_file_path, dir_path):
             value = " ".join(data[1:])
             # print("K: {}, V: {}".format(key, value))
             
-            wav_path = os.path.join(dir_path.split('/')[1], key.split("_")[1], key.split("_")[0], key + ".wav")
+            wav_path = os.path.join(dir_path.split('/')[1], key.split("_")[1], key.split("_")[0], key + ".trimmed.wav")
             wav = str(pathlib.Path(wav_path))
             text = value
             speaker_id = key.split("_")[0]
