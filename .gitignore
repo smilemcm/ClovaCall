@@ -2,6 +2,7 @@ log/
 models/
 
 data/zeroth_korean/
+data/KsponSpeech/
 
 .ipynb_checkpoints/
 

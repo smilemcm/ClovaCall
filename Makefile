@@ -6,6 +6,9 @@ install:
 	conda install pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=10.1 -c pytorch
 	pip install -r requirements.txt
 
+data:
+	
+
 train:
 	cd script.zeroth_korean && ./run_las_asr_trainer.sh
 
@@ -17,3 +20,6 @@ test:
 
 test.trim:
 	cd script.zeroth_korean && ./run_las_asr_decode.trimmed.sh
+
+train.ksponspeech:
+	cd script.ksponspeech && ./run_las_asr_trainer.sh
