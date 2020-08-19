@@ -1,3 +1,9 @@
+#!/bin/bash
+
+# Ubuntu 기준 (root로 변경 가능한 아이디) 
+# installation
+# >> sudo apt install ffmpeg
+
 # Convert all .flac files within this folder to .wav files
 
 # find . -iname "*.flac" | wc

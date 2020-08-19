@@ -6,6 +6,13 @@ install:
 	conda install pytorch==1.4.0 torchvision==0.5.0 cudatoolkit=10.1 -c pytorch
 	pip install -r requirements.txt
 
+tar:
+	tar cvfz clovacall_testdata_model.tar.gz data/zeroth_korean/test_data_01 models
+
+untar:
+	gdown --id 1T5n7hihhlICV9rKu0xTxMccApkI5tRit --output clovacall_testdata_model.tar.gz
+	tar xvfz clovacall_testdata_model.tar.gz
+
 data:
 	
 

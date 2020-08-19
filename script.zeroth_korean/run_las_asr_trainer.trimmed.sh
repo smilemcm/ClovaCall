@@ -54,7 +54,7 @@ DECODER_SIZE=512
 GPU_SIZE=1 # 1
 CPU_SIZE=8 # 4
 
-MAX_LEN=128
+MAX_LEN=128 
 
 TRAIN_INFO="zeroth_korean_trimmed" # "ClovaCall"
 
