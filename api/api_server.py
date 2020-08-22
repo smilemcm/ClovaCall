@@ -1,7 +1,6 @@
 #!env python
 
 from flask import Flask
-from flask import Response
 from flask import request
 from flask import jsonify
 
@@ -10,8 +9,6 @@ from werkzeug.utils import secure_filename
 import json
 import time
 import os
-import io
-import wave
 
 from pprint import pprint
 
@@ -26,10 +23,6 @@ from data_loader import load_audio
 import label_loader
 
 from models import EncoderRNN, DecoderRNN, Seq2Seq
-
-import shutil
-from scipy.io import wavfile
-
 ##################################
 
 app = Flask(__name__)
