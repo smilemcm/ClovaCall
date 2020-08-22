@@ -171,6 +171,8 @@ def save(audio=None):
     except Exception as e:
         print("Execption: ", e)
         return None
+    finally:
+        audio.close()
 
     return audio_path
 
