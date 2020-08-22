@@ -77,7 +77,7 @@ def setup():
     
     model_path = "../models/zeroth_korean_trimmed/LSTM_512x3_512x2_zeroth_korean_trimmed/final.pth"
     print("Loading checkpoint model %s" % model_path)
-    state = torch.load(model_path)
+    state = torch.load(model_path, map_location=device)
     model.load_state_dict(state['model'])
     print('Model loaded')
 
