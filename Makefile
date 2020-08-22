@@ -30,3 +30,10 @@ test.trim:
 
 train.ksponspeech:
 	cd script.ksponspeech && ./run_las_asr_trainer.sh
+
+server:
+	mkdir -p api/audio
+	cd api && CUDA_VISIBLE_DEVICES=1 python api_server.py
+
+path:
+	export PYTHONPATH=${PYTHONPATH}:${PWD}/las.pytorch
