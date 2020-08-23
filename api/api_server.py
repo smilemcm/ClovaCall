@@ -25,6 +25,13 @@ import label_loader
 from models import EncoderRNN, DecoderRNN, Seq2Seq
 ##################################
 
+#############
+import io
+import wave
+import traceback
+############
+
+
 app = Flask(__name__)
 
 
@@ -97,9 +104,12 @@ def label_to_string(labels):
         return sents
 
 
-def parse_audio(audio_path, sample_rate=16000, window_size=0.02, window_stride=0.01, normalize=True):
+def parse_audio(audio_path, audio_stream, sample_rate=16000, window_size=0.02, window_stride=0.01, normalize=True):
     
-    y = load_audio(audio_path)
+    if audio_path is not None:
+        y = load_audio(audio_path)
+    else:
+        y = load_audio(audio_stream)
 
     n_fft = int(sample_rate * window_size)
     window_size = n_fft
@@ -128,13 +138,13 @@ def parse_audio(audio_path, sample_rate=16000, window_size=0.02, window_stride=0
     return spect, spect_length
 
 
-def recognize(audio_path=None):
+def recognize(audio_path=None, audio_stream=None):
     rec = {}
     
     try:
         model.eval()
         with torch.no_grad():
-            feats, feat_lengths = parse_audio(audio_path) 
+            feats, feat_lengths = parse_audio(audio_path, audio_stream) 
             
             feats = feats.to(device)
             feat_lengths = feat_lengths.to(device)
@@ -165,9 +175,32 @@ def save(audio=None):
         print("Execption: ", e)
         return None
     finally:
-        audio.close()
+        # audio.close()
+        audio.stream.seek(0)
 
     return audio_path
+
+def save_stream(audio=None):
+    
+    try:
+        # @TODO audio's format should be 'WAV' (16000 Hz, 16 bit, mono)
+        audio_bytes = audio.read()
+        
+        wav_stream = io.BytesIO()
+        with wave.open(wav_stream, "wb") as f_wave:
+            f_wave.setnchannels(1)
+            f_wave.setsampwidth(2)
+            f_wave.setframerate(16000)
+            f_wave.writeframes(audio_bytes[44:])
+        
+    except Exception as e:
+        print("Execption Stream: ", e)
+        traceback.print_exc()
+        return None
+    finally:
+        audio.close()
+
+    return wav_stream
 
 
 @app.route('/predict', methods=['POST'])
@@ -177,16 +210,32 @@ def predict():
     end_time_save = time.time()
     
     start_time_reco = time.time()
-    rec_result = recognize(audio_path=audio_path)
+    rec_result_file = recognize(audio_path=audio_path, audio_stream=None)
     end_time_reco = time.time()
     
-    rec_result['save_time'] = float("{:.4f}".format(end_time_save - start_time_save))
-    rec_result['reco_time'] = float("{:.4f}".format(end_time_reco - start_time_reco))
-    rec_result['tota_time'] = float("{:.4f}".format(rec_result['save_time'] + rec_result['reco_time']))
+    start_time_save_stream = time.time()
+    audio_stream = save_stream(audio=request.files['audio'])
+    end_time_save_stream = time.time()
+    
+    start_time_reco_stream = time.time()
+    rec_result_stream = recognize(audio_path=None, audio_stream=audio_stream)
+    end_time_reco_stream = time.time()
+    
+    rec_result = {}
+    
+    rec_result['save_time_file  '] = float("{:.4f}".format(end_time_save - start_time_save))
+    rec_result['save_time_stream'] = float("{:.4f}".format(end_time_save_stream - start_time_save_stream))
+    
+    rec_result['reco_time_file  '] = float("{:.4f}".format(end_time_reco - start_time_reco))
+    rec_result['reco_time_stream'] = float("{:.4f}".format(end_time_reco_stream - start_time_reco_stream))
+    
+    rec_result['hyp_file  '] = rec_result_file['hyp']
+    rec_result['hyp_stream'] = rec_result_stream['hyp']
+    
     
     print("="*70)
-    # print(f"audio_path: {audio_path}")
-    pprint(f"rec_result: {rec_result}")
+    res_str = json.dumps(rec_result, indent=4, ensure_ascii=False)
+    print(f"rec_result: {res_str}")
     print("="*70)
     
     return jsonify(rec_result)

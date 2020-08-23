@@ -11,7 +11,14 @@ from torch.utils.data.sampler import Sampler
 
 
 def load_audio(path):
-    sound = np.memmap(path, dtype='h', mode='r')
+    
+    if isinstance(path, str):
+        sound = np.memmap(path, dtype='h', mode='r')
+        # print("np.memmap    ", sound.shape, len(sound), sound)
+    else:
+        sound = np.frombuffer(path.getvalue(), dtype=np.int16, offset=0) # offset=44
+        # print("np.frombuffer", sound.shape, len(sound), sound)
+    
     sound = sound.astype('float32') / 32767
 
     assert len(sound)
