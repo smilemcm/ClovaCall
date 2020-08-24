@@ -10,6 +10,8 @@ def check(json_path, char2index):
     key_list = char2index.keys()
     
     len_list = []
+
+    oov_char_set = set()
     
     with open(json_path, 'r', encoding='utf-8') as f:
         data = json.load(f)
@@ -20,7 +22,10 @@ def check(json_path, char2index):
             
             for char in text:
                 if char not in key_list:
+                    oov_char_set.add(char)
                     print(json_path, sample['wav'], text, char)
+
+        print("oov_char_set : {}".format(list(oov_char_set)))
         
         return max(len_list)
 

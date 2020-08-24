@@ -2,6 +2,7 @@ log/
 models/
 
 data/zeroth_korean/
+data/KsponSpeech/
 
 .ipynb_checkpoints/
 
@@ -11,3 +12,4 @@ data/zeroth_korean/
 *.wav
 *.flac
 /nohup.out
+*.tar.gz

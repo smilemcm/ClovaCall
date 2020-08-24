@@ -29,16 +29,16 @@ fi
 ##	Careful while modifying lines above.
 ################################################################
 
-TRAIN_FILE=data/zeroth_korean/train_zeroth_korean.trimmed.json
-TEST_FILE=data/zeroth_korean/test_zeroth_korean.trimmed.json
+TRAIN_FILE=data/KsponSpeech/train_KsponSpeech.json
+TEST_FILE=data/zeroth_korean/test_zeroth_korean.json
 LABEL_FILE=data/kor_syllable_zeroth.json
-DATASET_PATH=data/zeroth_korean
+DATASET_PATH=data/KsponSpeech
 
 CUDA_DEVICE_ID=1 # 0
 
 # Default
 RNN_TYPE=LSTM
-BATCH_SIZE=16 # 32
+BATCH_SIZE=8 # 16 # 32
 LR=3e-4
 LR_ANNEAL=1.1
 DROPOUT=0.3
@@ -51,12 +51,12 @@ ENCODER_SIZE=512
 DECODER_LAYERS=2
 DECODER_SIZE=512
 
-GPU_SIZE=1 # 1
+GPU_SIZE=1
 CPU_SIZE=8 # 4
 
-MAX_LEN=128 
+MAX_LEN=512
 
-TRAIN_INFO="zeroth_korean_trimmed" # "ClovaCall"
+TRAIN_INFO="ksponspeech" # "ClovaCall"
 
 ################################################################
 ##	Careful while modifying lines below.
