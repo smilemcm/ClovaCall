@@ -34,7 +34,7 @@ TEST_FILE=data/zeroth_korean/test_zeroth_korean.json
 LABEL_FILE=data/kor_syllable_zeroth.json
 DATASET_PATH=data/zeroth_korean
 
-CUDA_DEVICE_ID=1 # 0
+CUDA_DEVICE_ID=0 # 0
 
 # Default
 RNN_TYPE=LSTM

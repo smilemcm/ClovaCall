@@ -1,4 +1,6 @@
 #!env python
+import sys
+sys.path.append('../las.pytorch')
 
 from flask import Flask
 from flask import request
