@@ -52,7 +52,7 @@ DECODER_LAYERS=2
 DECODER_SIZE=512
 
 GPU_SIZE=1
-CPU_SIZE=8 # 4 
+CPU_SIZE=8 # 4
 
 MAX_LEN=128
 
@@ -94,11 +94,18 @@ python -u $TARGET_CODE \
 --learning-anneal $LR_ANNEAL \
 --dropout $DROPOUT \
 --teacher_forcing $TF_RATIO \
---encoder_layers $ENCODER_LAYERS --encoder_size $ENCODER_SIZE \
---decoder_layers $DECODER_LAYERS --decoder_size $DECODER_SIZE \
---train-file $TRAIN_FILE --test-file-list $TEST_FILE \
+--encoder_layers $ENCODER_LAYERS \
+--encoder_size $ENCODER_SIZE \
+--decoder_layers $DECODER_LAYERS \
+--decoder_size $DECODER_SIZE \
+--train-file $TRAIN_FILE \
+--test-file-list $TEST_FILE \
 --labels-path $LABEL_FILE \
 --dataset-path $DATASET_PATH \
---load-model --mode $MODE \
+--load-model \
+--mode $MODE \
 --max_len $MAX_LEN \
---cuda --save-folder $CUR_MODEL_PATH --model-path $CUR_MODEL_PATH/final.pth --log-path $LOG_CHILD_PATH | tee $LOG_FILE 
+--cuda \
+--save-folder $CUR_MODEL_PATH \
+--model-path $CUR_MODEL_PATH/final.pth \
+--log-path $LOG_CHILD_PATH | tee $LOG_FILE
